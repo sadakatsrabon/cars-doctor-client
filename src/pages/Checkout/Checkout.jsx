@@ -4,31 +4,50 @@ import { AuthContext } from "../../providers/AuthProviders";
 
 
 const Checkout = () => {
-    
+
     const service = useLoaderData();
-    const { _id, title, price } = service;
+    const { _id, title, price, img } = service;
     const { user } = useContext(AuthContext)
 
-    const handleCheckout = event => {
+    const handleCheckout = (event) => {
         event.preventDefault();
         const form = event.target;
         const name = form.name.value;
         const date = form.date.value;
         const email = user?.email;
         const dueAm = form.due.value;
-        const order = {
+        const checkout = {
             customerName: name,
             email,
+            img,
             date,
-            service: _id,
+            service: title,
+            service_id: _id,
             price,
             dueAm,
         }
-        console.log(order)
+
+        console.log(checkout);
+
+        // Add error handling here
+
+        fetch('http://localhost:5100/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+
+            },
+            body: JSON.stringify(checkout),
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+
     }
     return (
         <div>
-            <h2 className="text-center text-3xl font-bold">This is checkout page : {title} </h2>
+            <h2 className="text-center text-3xl font-bold">Checkout : {title} </h2>
             <div className="card-body">
                 <form onSubmit={handleCheckout}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
