@@ -5,14 +5,24 @@ import { AuthContext } from '../../../providers/AuthProviders';
 
 
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext);
 
-    const {user} = useContext(AuthContext);
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(error => console.error(error))
+    }
+
     const navItems = <>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/service">Service</Link></li>
         <li><Link to="/signup">Sign Up</Link></li>
-        <li><Link to="/login">Login</Link></li>
+        {user?.email ? <>
+            <li><li><Link to="/bookings">My Bookings</Link></li></li>
+            <li><button onClick={handleLogOut}>LogOut</button></li>
+        </> : <li><Link to="/login">Login</Link></li>
+        }
     </>
     return (
         <div className="navbar bg-base-100 h-28 mb-4">
